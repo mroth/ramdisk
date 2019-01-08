@@ -81,7 +81,7 @@ func formatHFS(devicePath, volumeName string, logger *log.Logger) error {
 }
 
 func mountHFS(devicePath, mountPath string, logger *log.Logger) error {
-	cmd := exec.Command("mount_hfs", devicePath, mountPath)
+	cmd := exec.Command("mount", "-t", "hfs", "-v", devicePath, mountPath)
 	stdout, err := cmd.Output()
 	if err == nil && logger != nil {
 		logger.Printf("%s\n", bytes.TrimSpace(stdout))
