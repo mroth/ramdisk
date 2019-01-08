@@ -12,7 +12,7 @@ const Version = "0.0.x"
 
 // defaults that are used for any zero value in Options
 const (
-	DefaultSize = 32 * datasize.MiB
+	DefaultSize = 32 * datasize.MB
 )
 
 // Options are optional values that will override default behavior
