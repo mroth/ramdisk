@@ -8,6 +8,7 @@ import (
 	"github.com/mroth/ramdisk/datasize"
 )
 
+// Version is the semantic version of this package.
 const Version = "0.0.x"
 
 // defaults that are used for any zero value in Options
@@ -17,23 +18,26 @@ const (
 
 // Options are optional values that will override default behavior
 type Options struct {
-	MountPath string      // optional mountpath (if zero, fileutil.TmpDir will be used)
-	Size      uint64      // optional size in bytes (if zero, constant DefaultSize will be used)
-	Logger    *log.Logger // if defined, steps may be more verbosely logged to it
+	MountPath string      // optional: fs mount dir  (default: fileutil.TempDir)
+	Size      uint64      // optional: size in bytes (default: DefaultSize)
+	Logger    *log.Logger // optional: logger for verbose implementation logs
 }
 
-// RamDisk represents the "results" of a ram disk creation operation
-type RamDisk struct {
-	// The system path referring to the ramdisk. This may or may not be
+// RAMDisk represents the "results" of a ram disk creation operation
+type RAMDisk struct {
+	// The system path referring to the RAMDisk. This may or may not be
 	// identical to the MountPath, depending on operating system specific
 	// implementations.
 	DevicePath string
-	// The filesystem path where the ramdisk is mounted and may be viewed.
+	// The filesystem path where the RAMDisk is mounted and may be viewed.
 	MountPath string
 }
 
+// PlatformImplementation is the interface that should be implmented on an
+// individual platform (operating system, etc), and hidden behind platform
+// specific build tags.
 type PlatformImplementation interface {
-	create(opts Options) (*RamDisk, error)
+	create(opts Options) (*RAMDisk, error)
 	destroy(deviceID string) error
 }
 
@@ -47,8 +51,8 @@ var implementation PlatformImplementation
 //
 //     rd, err := ramdisk.Create(Options{})
 //
-// May return an error on numerous conditions.
-func Create(opts Options) (*RamDisk, error) {
+// May return an error on numerous platform-specific conditions.
+func Create(opts Options) (*RAMDisk, error) {
 	if implementation == nil {
 		return nil, errors.New("platform not supported")
 	}

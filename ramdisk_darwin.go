@@ -10,12 +10,14 @@ import (
 	"github.com/mroth/ramdisk/datasize"
 )
 
-// macosPlatformImplmentation is the implementation for macOS systems.
+// DarwinPlatformImplementation is the implementation for macOS systems.
+//
+// Some notes and performance observations at:
 // https://jakobstoeck.de/2017/ramdisk-for-faster-applications-under-macos/
-type macosPlatformImplementation struct{}
+type DarwinPlatformImplementation struct{}
 
 func init() {
-	implementation = macosPlatformImplementation{}
+	implementation = DarwinPlatformImplementation{}
 }
 
 const (
@@ -34,8 +36,8 @@ const (
 //
 //   RamDisk{DeviceID:"/dev/disk2", MountPath:""}, Err:"Failed to mount at /foo"
 //
-func (i macosPlatformImplementation) create(opts Options) (*RamDisk, error) {
-	var rd RamDisk
+func (i DarwinPlatformImplementation) create(opts Options) (*RAMDisk, error) {
+	var rd RAMDisk
 
 	desiredBlocks := opts.Size / blockSize
 	devicePath, deviceErr := createDevice(desiredBlocks)
@@ -89,24 +91,30 @@ func mountHFS(devicePath, mountPath string, logger *log.Logger) error {
 	return err
 }
 
-func (i macosPlatformImplementation) destroy(devicePath string) error {
+func (i DarwinPlatformImplementation) destroy(devicePath string) error {
 	cmd := exec.Command("diskutil", "eject", devicePath)
 	return cmd.Run()
 }
 
-// unmount apfs: diskutil unmountDisk
+/*
+Some notes regarding doing this with APFS in the future instead. (Any real
+benefit tho?)
 
-// formats and mounts, will end up at /Volumes/<volName>
-//
-// newfs_apfs will also format, however those dont appear to be mountable via mount_apfs on top of normal filesystem?
-//
-// https://stackoverflow.com/questions/46224103/create-apfs-ram-disk-on-macos-high-sierra
-//
-// Usage:  diskutil partitionDisk MountPoint|DiskIdentifier|DeviceNode
-//         [numberOfPartitions] [APM[Format]|MBR[Format]|GPT[Format]]
-//         [part1Format part1Name part1Size part2Format part2Name part2Size
-//          part3Format part3Name part3Size ...]
-// diskutil partitionDisk $(hdiutil attach -nomount ram://2048000) 1 GPTFormat APFS 'ramdisk' '100%'
+This implementation formats and mounts, will end up at /Volumes/<volName>
+
+newfs_apfs will also format, however those dont appear to be mountable via
+mount_apfs on top of normal filesystem?
+
+https://stackoverflow.com/questions/46224103/create-apfs-ram-disk-on-macos-high-sierra
+
+Usage:  diskutil partitionDisk MountPoint|DiskIdentifier|DeviceNode
+        [numberOfPartitions] [APM[Format]|MBR[Format]|GPT[Format]] [part1Format
+        part1Name part1Size part2Format part2Name part2Size part3Format
+        part3Name part3Size ...] diskutil partitionDisk $(hdiutil attach
+        -nomount ram://2048000) 1 GPTFormat APFS 'ramdisk' '100%'
+
+unmount apfs: diskutil unmountDisk
+*/
 // func formatAPFS(devicePath string, volumeName string) error {
 // 	const numPartitions = "1"
 // 	const partitionScheme = "GPTFormat"
