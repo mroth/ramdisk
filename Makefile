@@ -8,7 +8,7 @@ test:
 # this requires --privileged execution, but is still significantly faster than
 # firing up a full Linux VM to test if developing on a different platform.
 test-docker:
-	docker run --privileged \
+	docker run --rm --privileged \
 		-e "GO111MODULE=on" \
 		-v "$(CURDIR):/code" \
 		--workdir "/code" \
