@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
@@ -32,8 +33,14 @@ func TestCreate(t *testing.T) {
 		Logger: testLogger(t),
 	})
 	if err != nil {
-		t.Fatal(err)
+		exiterr, ok := err.(*exec.ExitError)
+		if ok {
+			t.Fatalf("%s\n", exiterr.Stderr)
+		} else {
+			t.Fatal(err)
+		}
 	}
+
 	// mark for cleanup after tests complete
 	defer ramdisk.Destroy(rd.DevicePath)
 
@@ -83,11 +90,16 @@ func TestCreate(t *testing.T) {
 func TestDestroy(t *testing.T) {
 	rd, err := ramdisk.Create(ramdisk.Options{})
 	if err != nil {
-		t.Error("precondition creating ramdisk failed!")
+		t.Skip("precondition creating ramdisk failed!")
 	}
 	err = ramdisk.Destroy(rd.DevicePath)
 	if err != nil {
-		t.Fatal(err)
+		exiterr, ok := err.(*exec.ExitError)
+		if ok {
+			t.Fatalf("ExitError: %s\n", exiterr.Stderr)
+		} else {
+			t.Fatal(err)
+		}
 	}
 }
 
