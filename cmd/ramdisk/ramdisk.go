@@ -17,7 +17,7 @@ const (
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, `ramdisk %s 🐏 💾
+	fmt.Fprintf(os.Stderr, `ramdisk %s 🐏
 
 Usage:
   ramdisk [options] create [<mount-path>]
@@ -59,9 +59,9 @@ func main() {
 			}
 			os.Exit(1)
 		}
-		logger.Printf("%vMB ramdisk created as %v, mounted at %v\n",
+		fmt.Fprintf(os.Stderr, "%vMB ramdisk created as %v, mounted at %v\n",
 			*size, rd.DevicePath, rd.MountPath)
-		logger.Printf("To later remove do: `ramdisk destroy %v`\n",
+		fmt.Fprintf(os.Stderr, "To later remove do: `ramdisk destroy %v`\n",
 			rd.DevicePath)
 	case "destroy":
 		device := flag.Arg(1)
