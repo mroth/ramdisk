@@ -32,14 +32,7 @@ func TestCreate(t *testing.T) {
 	rd, err := ramdisk.Create(ramdisk.Options{
 		Logger: testLogger(t),
 	})
-	if err != nil {
-		exiterr, ok := err.(*exec.ExitError)
-		if ok {
-			t.Fatalf("%s\n", exiterr.Stderr)
-		} else {
-			t.Fatal(err)
-		}
-	}
+	ifErrLogFatalDetailed(err, t)
 
 	// mark for cleanup after tests complete
 	defer ramdisk.Destroy(rd.DevicePath)
@@ -76,9 +69,7 @@ func TestCreate(t *testing.T) {
 	// unmount ramdisk, no errors
 	t.Log("unmounting", rd.DevicePath)
 	err = ramdisk.Destroy(rd.MountPath)
-	if err != nil {
-		t.Fatal(err)
-	}
+	ifErrLogFatalDetailed(err, t)
 
 	// go FS to see if file exists (should not)
 	t.Logf("checking for existence of %v (should not exist)", target)
@@ -93,6 +84,13 @@ func TestDestroy(t *testing.T) {
 		t.Skip("precondition creating ramdisk failed!")
 	}
 	err = ramdisk.Destroy(rd.DevicePath)
+	ifErrLogFatalDetailed(err, t)
+}
+
+// helper function to wrap some boilerplate for returns from Cmd.Exec,
+// if there is an error log it fatally, but checking if its an ExitError
+// and using the more detailed Stderr value if so.
+func ifErrLogFatalDetailed(err error, t *testing.T) {
 	if err != nil {
 		exiterr, ok := err.(*exec.ExitError)
 		if ok {

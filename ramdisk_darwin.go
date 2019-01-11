@@ -93,7 +93,22 @@ func mountHFS(devicePath, mountPath string, logger *log.Logger) error {
 
 func (i DarwinPlatformImplementation) destroy(devicePath string) error {
 	cmd := exec.Command("diskutil", "eject", devicePath)
-	return cmd.Run()
+	// diskutil is a bad citizen, and *sometimes* writes to stdout on error
+	// conditions...but not always! What a mess. So as a workaround we grab
+	// stdout, and if if detect an ExitError, we check for Stderr the generic Go
+	// generated replacement that is populated when Stderr is nil (see godocs
+	// for Cmd.Output for a reference about that) and it is present, we
+	// overwrite it with the stdout contents which are probably the actual error
+	// msg.
+	out, err := cmd.Output()
+	if exiterr, ok := err.(*exec.ExitError); ok &&
+		string(exiterr.Stderr) == "exit status 1" &&
+		string(out) != "" {
+
+		exiterr.Stderr = out
+		return exiterr
+	}
+	return err
 }
 
 /*

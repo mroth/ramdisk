@@ -70,7 +70,12 @@ func main() {
 		}
 		err := ramdisk.Destroy(device)
 		if err != nil {
-			logger.Fatalln(err)
+			logger.Println(err)
+			exiterr, ok := err.(*exec.ExitError)
+			if ok {
+				logger.Printf("%s\n", exiterr.Stderr)
+			}
+			os.Exit(1)
 		} else if *verbose {
 			logger.Printf("Disk %s unmounted\n", device)
 		}
