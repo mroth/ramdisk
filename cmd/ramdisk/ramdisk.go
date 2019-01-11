@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	defaultSize = 32
+	defaultSize = ramdisk.DefaultSize / datasize.MB
 )
 
 func usage() {
