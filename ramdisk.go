@@ -4,6 +4,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"os"
+	"runtime"
 
 	"github.com/mroth/ramdisk/datasize"
 )
@@ -18,7 +20,7 @@ const (
 
 // Options are optional values that will override default behavior
 type Options struct {
-	MountPath string      // optional: fs mount dir  (default: fileutil.TempDir)
+	MountPath string      // optional: fs mount dir  (default: temp directory)
 	Size      uint64      // optional: size in bytes (default: DefaultSize)
 	Logger    *log.Logger // optional: logger for verbose implementation logs
 }
@@ -68,7 +70,14 @@ func (o *Options) applyDefaults() error {
 		o.Size = DefaultSize
 	}
 	if o.MountPath == "" {
-		tmp, err := ioutil.TempDir("", "ramdisk-")
+		tmpdir := os.TempDir()
+		// the default TempDir() on darwin is designed to be unpredictable and
+		// secure, however that makes its a long ugly monstrosity that makes it
+		// terrible from a UX perspective if presented to the end-user directly.
+		if runtime.GOOS == "darwin" {
+			tmpdir = "/tmp"
+		}
+		tmp, err := ioutil.TempDir(tmpdir, "ramdisk-")
 		if err != nil {
 			return err
 		}
