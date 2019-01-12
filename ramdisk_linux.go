@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-// LinuxPlatformImplmentation is the implementation for Linux systems.
+// LinuxPlatformImplementation is the implementation for Linux systems.
 //
 // The Linux implementation likely *requires sudo* to function on most distros.
 // If you want a sudo-less option, you can simply use /dev/shm instead on most

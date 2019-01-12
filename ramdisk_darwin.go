@@ -29,7 +29,7 @@ const (
 // create creates a macOS ramdisk device, formats it, and mounts it.
 //
 // Even if an error is generated, a reference to a partial RamDisk struct may be
-// returned, as the error may have occured after device creation or formatting
+// returned, as the error may have occurred after device creation or formatting
 // (for example, a mounting error), and the user may wish to know where the
 // orphaned device was left. For example, you could end up with a results such
 // as:
