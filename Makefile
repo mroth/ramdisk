@@ -12,4 +12,4 @@ test-docker:
 		-e "GO111MODULE=on" \
 		-v "$(CURDIR):/code" \
 		--workdir "/code" \
-		golang:1.11-alpine "go" "test" "-v"
+		golang:1.17-alpine "go" "test" "-v"
