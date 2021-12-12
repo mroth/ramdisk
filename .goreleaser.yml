@@ -1,32 +1,33 @@
+project_name: ramdisk
 before:
   hooks:
     - go mod download
 builds:
 - main: ./cmd/ramdisk/ramdisk.go
   env:
-  - CGO_ENABLED=0
+    - CGO_ENABLED=0
   goos:
     - linux
     - darwin
-  ignore:
-    - goos: darwin
-      goarch: 386
-archive:
-  replacements:
+  goarch:
+    - amd64
+    - arm64
+archives:
+- replacements:
     darwin: macOS
-    386: i386
     amd64: x64
 checksum:
   name_template: 'checksums.txt'
 snapshot:
   name_template: "{{ .Tag }}-next"
-brew:
-  name: ramdisk
-  description: Convenience wrapper for creating RAM disks.
-  homepage: https://github.com/mroth/ramdisk
-  github:
-    owner: mroth
-    name: homebrew-formulas
+brews:
+  -
+    tap:
+      owner: mroth
+      name: homebrew-tap
+    description: Convenience wrapper for creating RAM disks.
+    homepage: https://github.com/mroth/ramdisk
+    skip_upload: false
 changelog:
   sort: asc
   filters:

@@ -36,8 +36,8 @@ To later remove do: `ramdisk destroy /dev/disk5`
 ## Installation
 
 * 💾 Download a [precompiled binary](https://github.com/mroth/ramdisk/releases/).
-* 🍺 Homebrew on macOS: `brew install mroth/formulas/ramdisk`
-* 📦 Compile via Go toolchain: `go get github.com/mroth/ramdisk/cmd/ramdisk`
+* 🍺 Homebrew on macOS: `brew install mroth/tap/ramdisk`
+* 📦 Compile via Go toolchain: `go install github.com/mroth/ramdisk/cmd/ramdisk@latest`
 
 ## Platform Support
 
