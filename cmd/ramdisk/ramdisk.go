@@ -17,7 +17,7 @@ const (
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, `ramdisk %s 🐏
+	fmt.Fprintf(os.Stderr, `ramdisk 🐏
 
 Usage:
   ramdisk [options] create [<mount-path>]
@@ -29,7 +29,7 @@ Options:
   -size=<mb>    Size in megabytes [default: %v].
 
 For more information see https://github.com/mroth/ramdisk
-`, ramdisk.Version, defaultSize)
+`, defaultSize)
 }
 
 func main() {

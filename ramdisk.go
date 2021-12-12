@@ -10,9 +10,6 @@ import (
 	"github.com/mroth/ramdisk/datasize"
 )
 
-// Version is the semantic version of this package.
-const Version = "0.1.0"
-
 // defaults that are used for any zero value in Options
 const (
 	DefaultSize = 32 * datasize.MB
