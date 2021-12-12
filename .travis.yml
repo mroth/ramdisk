@@ -21,10 +21,6 @@ matrix:
     - name: macOS 10.12
       osx_image: xcode9.2 # => macOS 10.12
       os: osx
-    - name: macOS 10.11
-      osx_image: xcode8   # => macOS 10.11
-      os: osx
-    # osx_image: xcode6.4 # => macOS 10.10 deprecated on travis-ci Jan2019
     # linux requires sudo to run our integration tests
     - name: Linux
       os: linux
