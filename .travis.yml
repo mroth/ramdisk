@@ -1,13 +1,22 @@
 language: go
 go:
-  - "1.11.x"
+  - "1.17.x"
 
 matrix:
   include:
     # utilize xcode builds to test different macOS versions,
     # see: https://docs.travis-ci.com/user/reference/osx/#macos-version
+    - name: macOS 11.6
+      osx_image: xcode13.1 # => macOS 11.6
+      os: osx
+    - name: macOS 10.15
+      osx_image: xcode12.2 # => macOS 10.15.7
+      os: osx
+    - name: macOS 10.14
+      osx_image: xcode11.3 # => macOS 10.14.6
+      os: osx
     - name: macOS 10.13
-      osx_image: xcode9.4 # => macOS 10.13
+      osx_image: xcode10.1 # => macOS 10.13
       os: osx
     - name: macOS 10.12
       osx_image: xcode9.2 # => macOS 10.12
